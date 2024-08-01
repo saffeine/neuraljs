@@ -1,0 +1,68 @@
+<html>
+    <head>
+        <title>Neural Shit</title>
+    </head>
+
+    <script src="./src/innovation.js"></script>
+    <script src="./src/genome.js"></script>
+    <script src="./src/neuron.js"></script>
+    <script src="./src/synapse.js"></script>
+
+    <script>
+        function getCanvas(){ return document.getElementById("canv").getContext("2d"); }
+        
+        function blankCanvas(){
+            let canv = getCanvas();
+            canv.fillStyle = "#AAA";
+            canv.fillRect(0, 0, 400, 500);
+        }
+
+        function mapToCanvas(genome, x, y, width, height){
+            let canv = getCanvas();
+            let totalNeurons = [];
+            let nCol = "#0F0"; let nSize = 8;
+            let sCol = "#00F2"; let sSize = 2;
+
+            for(let i in genome.synapses){
+                let synapse = genome.innovation.getSynapse(genome.synapses[i]);
+                let from = genome.innovation.getNeuron(synapse.from);
+                let to = genome.innovation.getNeuron(synapse.to);
+
+                let aX = (from.x * width);
+                let aY = (from.y * height);
+                let bX = (to.x * width);
+                let bY = (to.y * height);
+
+                canv.beginPath();
+                canv.moveTo(aX, aY)
+                canv.lineWidth = sSize;
+                canv.strokeStyle = sCol;
+                canv.lineTo(bX, bY);
+                canv.stroke();
+            }
+
+            for(let i in genome.inputNeurons){ totalNeurons.push(genome.inputNeurons[i]); }
+            for(let i in genome.outputNeurons){ totalNeurons.push(genome.outputNeurons[i]); }
+            for(let i in genome.hiddenNeurons){ totalNeurons.push(genome.hiddenNeurons[i]); }
+
+            for(let i in totalNeurons){
+                let neuron = genome.innovation.getNeuron(totalNeurons[i]);
+                let x = (neuron.x * width) - (nSize / 2); let y = (neuron.y * height) - (nSize / 2);
+                canv.fillStyle = nCol;
+                canv.fillRect(x, y, nSize, nSize);
+            }
+        }
+    </script>
+    
+    <body style="background-color: #EEE;">
+        <script>
+            inno = (new Innovation(5, 2));
+            genome = (new Genome(inno));
+            genome.instantiate();
+        </script>
+
+        <canvas id="canv" width="400" height="500">
+
+        </canvas>
+    </body>
+</html>
