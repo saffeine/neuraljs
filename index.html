@@ -1,68 +1,56 @@
 <html>
     <head>
-        <title>Neural Shit</title>
+        <title>NeuralJS</title>
+        <script src='./src/brain.js'></script>
+        <script src='./src/network.js'></script>
     </head>
 
-    <script src="./src/innovation.js"></script>
-    <script src="./src/genome.js"></script>
-    <script src="./src/neuron.js"></script>
-    <script src="./src/synapse.js"></script>
+    <style>
+        canvas {
+            width: 800px;
+            height: 600px;
+
+            margin: 4px 0px;
+            border: 1px solid #000;
+            border-radius: 2px;
+        }
+
+        button {
+            padding: 8px 16px;
+            font-size: 16px;
+        }
+    </style>
 
     <script>
-        function getCanvas(){ return document.getElementById("canv").getContext("2d"); }
-        
-        function blankCanvas(){
-            let canv = getCanvas();
-            canv.fillStyle = "#AAA";
-            canv.fillRect(0, 0, 400, 500);
+        function initEnvironment(){
+            network = (new Network(7, 4));
+            brain = (new Brain(network));
+
+            return;
         }
 
-        function mapToCanvas(genome, x, y, width, height){
-            let canv = getCanvas();
-            let totalNeurons = [];
-            let nCol = "#0F0"; let nSize = 8;
-            let sCol = "#00F2"; let sSize = 2;
+        function refreshCanvas(){
+            let canvas = document.getElementById('canvas');
+            let context = canvas.getContext('2d');
+            let width = parseInt(canvas.width);
+            let height = parseInt(canvas.height);
 
-            for(let i in genome.synapses){
-                let synapse = genome.innovation.getSynapse(genome.synapses[i]);
-                let from = genome.innovation.getNeuron(synapse.from);
-                let to = genome.innovation.getNeuron(synapse.to);
+            context.fillStyle = '#111';
+            context.fillRect(0, 0, width, height);
 
-                let aX = (from.x * width);
-                let aY = (from.y * height);
-                let bX = (to.x * width);
-                let bY = (to.y * height);
-
-                canv.beginPath();
-                canv.moveTo(aX, aY)
-                canv.lineWidth = sSize;
-                canv.strokeStyle = sCol;
-                canv.lineTo(bX, bY);
-                canv.stroke();
-            }
-
-            for(let i in genome.inputNeurons){ totalNeurons.push(genome.inputNeurons[i]); }
-            for(let i in genome.outputNeurons){ totalNeurons.push(genome.outputNeurons[i]); }
-            for(let i in genome.hiddenNeurons){ totalNeurons.push(genome.hiddenNeurons[i]); }
-
-            for(let i in totalNeurons){
-                let neuron = genome.innovation.getNeuron(totalNeurons[i]);
-                let x = (neuron.x * width) - (nSize / 2); let y = (neuron.y * height) - (nSize / 2);
-                canv.fillStyle = nCol;
-                canv.fillRect(x, y, nSize, nSize);
-            }
+            return;
         }
     </script>
-    
-    <body style="background-color: #EEE;">
+
+    <body>
+        <canvas id='canvas'></canvas>
+        <br>
+        <button onclick='refreshCanvas();'>refresh</button>
+        <button onclick='mutate();'>mutate</button>
+        <button onclick='calculate();'>calculate</button>
         <script>
-            inno = (new Innovation(5, 2));
-            genome = (new Genome(inno));
-            genome.instantiate();
+            initEnvironment();
+            refreshCanvas();
         </script>
-
-        <canvas id="canv" width="400" height="500">
-
-        </canvas>
     </body>
 </html>
