@@ -1,5 +1,5 @@
 class Neuron {
-    constructor(){
-        
+    constructor(innovationId){
+        this.innovationId = innovationId;
     }
 }
